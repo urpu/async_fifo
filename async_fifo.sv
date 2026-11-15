@@ -30,7 +30,7 @@ module async_fifo
 
    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
    // write pointer
-   always_ff @(posedge aclk_1)
+   always_ff @(posedge aclk_1 or negedge aresetn_1)
        if (~aresetn_1)
            wr_pnter <= '0;
        else if (push) begin
@@ -43,7 +43,7 @@ module async_fifo
 
     //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     // read pointer
-    always_ff @(posedge aclk_2)
+    always_ff @(posedge aclk_2 or negedge aresetn_2)
         if (~aresetn_2)
             rd_pnter <= '0;
         else if (pop) begin
@@ -68,13 +68,13 @@ module async_fifo
 
     //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     // synchronizers
-    always_ff @(posedge aclk_1)
+    always_ff @(posedge aclk_1 or negedge aresetn_1)
         if (~aresetn_1)
             {sync_rd_pnter[1], sync_rd_pnter[0]} <= '0;
         else
             {sync_rd_pnter[1], sync_rd_pnter[0]} <= {sync_rd_pnter[0], gr_rd_pnter};
 
-    always_ff @(posedge aclk_2)
+    always_ff @(posedge aclk_2 or negedge aresetn_2)
         if (~aresetn_2)
             {sync_wr_pnter[1], sync_wr_pnter[0]} <= '0;
         else
@@ -95,6 +95,23 @@ module async_fifo
 
     assign pop   = ~empty && s_tready;
     assign s_tvalid = ~empty;
+
+
+    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    // assertions
+    property p_bad_access(aclk, inc, flag);
+        @(posedge aclk) inc |-> !flag;
+    endproperty
+
+    property p_gray_code(aclk, aresetn, gr_pnter);
+        @(posedge aclk) disable iff (~aresetn)
+        !$stable(gr_pnter) |-> $onehot(gr_pnter ^ $past(gr_pnter));
+    endproperty
+
+    assert property(p_bad_access(aclk_1, push, full));
+    assert property(p_bad_access(aclk_2, pop,  empty));
+    assert property(p_gray_code(aclk_1, aresetn_1, gr_wr_pnter));
+    assert property(p_gray_code(aclk_2, aresetn_2, gr_rd_pnter));
     
 
 
