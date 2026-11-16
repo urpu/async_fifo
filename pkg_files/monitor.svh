@@ -4,8 +4,6 @@ class af_monitor extends uvm_monitor;
 
     virtual async_fifo_intf af_if;
 
-    af_sequence_item af_item;
-
     af_analysis_sequence_item af_an_item;
 
     typedef bit [15:0] tdata;

@@ -1,15 +1,15 @@
 module async_fifo
-#(parameter WIDTH = 16,
-  parameter DEPTH = 8)
+#(parameter AF_WIDTH = 16,
+  parameter AF_DEPTH = 8)
 
   (input  logic aclk_1, aclk_2, aresetn_1, aresetn_2,
 
    input  logic m_tvalid,
    output logic m_tready,
-   input  logic [WIDTH - 1:0] wr_tdata,   
+   input  logic [AF_WIDTH - 1:0] wr_tdata,   
    output logic s_tvalid,
    input  logic s_tready,
-   output logic [WIDTH - 1:0] rd_tdata);
+   output logic [AF_WIDTH - 1:0] rd_tdata);
 
    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
    localparam PTR_DEPTH = $clog2(DEPTH);
@@ -26,7 +26,7 @@ module async_fifo
    logic [PTR_DEPTH:0] sync_rd_pnter [1:0];
 
    logic pop, push, full, empty;
-   logic [WIDTH - 1:0] data [DEPTH - 1:0];
+   logic [AF_WIDTH - 1:0] data [AF_DEPTH - 1:0];
 
    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
    // write pointer
@@ -34,7 +34,7 @@ module async_fifo
        if (~aresetn_1)
            wr_pnter <= '0;
        else if (push) begin
-           if (wr_pnter[PTR_DEPTH - 1:0] == DEPTH-1) begin
+           if (wr_pnter[PTR_DEPTH - 1:0] == AF_DEPTH-1) begin
                wr_pnter <= {~wr_pnter[PTR_DEPTH], {(PTR_DEPTH){1'b0}}};
            end
            else
@@ -47,7 +47,7 @@ module async_fifo
         if (~aresetn_2)
             rd_pnter <= '0;
         else if (pop) begin
-            if (rd_pnter[PTR_DEPTH- 1:0] == DEPTH - 1)
+            if (rd_pnter[PTR_DEPTH- 1:0] == AF_DEPTH - 1)
                 rd_pnter <= {~rd_pnter[PTR_DEPTH], {(PTR_DEPTH){1'b0}}};
             else
                 rd_pnter <= rd_pnter + 1'b1;
