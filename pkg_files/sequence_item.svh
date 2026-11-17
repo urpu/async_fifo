@@ -14,7 +14,6 @@ class af_m_sequence_item extends uvm_sequence_item;
     rand bit [AF_WIDTH-1:0] wr_tdata;
 
     constraint m_tvalid_freq {m_tvalid dist {1 := tvalid_one_freq, 0 := tvalid_zero_freq};}
-    constraint s_tready_freq {s_tready dist {1 := tready_one_freq, 0 := tready_zero_freq};}
 
 endclass
 
@@ -32,8 +31,6 @@ class af_s_sequence_item extends uvm_sequence_item;
 
     rand bit s_tready;
 
-
-    constraint m_tvalid_freq {m_tvalid dist {1 := tvalid_one_freq, 0 := tvalid_zero_freq};}
     constraint s_tready_freq {s_tready dist {1 := tready_one_freq, 0 := tready_zero_freq};}
 
 endclass

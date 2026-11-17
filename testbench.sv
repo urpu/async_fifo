@@ -13,7 +13,7 @@ module testbench;
                     .aresetn_1(aresetn_1), .aresetn_2(aresetn_2));
 
 
-    async_fifo #(.WIDTH(WIDTH), .DEPTH(DEPTH))
+    async_fifo #(.AF_WIDTH(AF_WIDTH), .AF_DEPTH(AF_DEPTH))
                as_fifo 
                (.aclk_1   (aclk_1),
                 .aclk_2   (aclk_2),
@@ -46,22 +46,17 @@ module testbench;
 
 
     initial begin
-        repeat(100) @(posedge aclk_1);
-        aresetn_1 <= 0;
-        repeat (4)  @(posedge aclk_1);
-        aresetn_1 <= 1;
-    end
-
-    initial begin
-        repeat(100) @(posedge aclk_2);
-        aresetn_2 <= 0;
-        repeat (4)  @(posedge aclk_2);
-        aresetn_2 <= 1;
+        #100;
+        aresetn_1 = 0;
+        aresetn_2 = 0;
+        #100;
+        aresetn_1 = 1;
+        aresetn_2 = 1;
     end
 
 
     initial begin
-        repeat(100000) @(posedge aclk_1);
+        repeat(10**6) @(posedge aclk_1);
         $display("Timeout!");
         $stop();
     end

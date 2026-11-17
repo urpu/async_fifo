@@ -13,6 +13,8 @@ import params_pkg::*;
 
 `include "./pkg_files/sequence_item.svh"
 
+`include "./pkg_files/sequencers.svh"
+
 `include "./pkg_files/driver.svh"
 
 `include "./pkg_files/monitor.svh"

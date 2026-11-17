@@ -20,8 +20,8 @@ endclass
 class af_vsequencer extends uvm_sequencer;
     `uvm_component_utils(af_vsequencer)
 
-    af_m_sequencer af_m_sqncer;
-    af_s_sequencer af_s_sqncer;
+    af_m_sequencer af_m_seqer;
+    af_s_sequencer af_s_seqer;
 
     function new(string name = "af_vsequencer", uvm_component parent);
         super.new(name, parent);

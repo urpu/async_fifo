@@ -12,7 +12,7 @@ module async_fifo
    output logic [AF_WIDTH - 1:0] rd_tdata);
 
    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-   localparam PTR_DEPTH = $clog2(DEPTH);
+   localparam PTR_DEPTH = $clog2(AF_DEPTH);
 
 
    // write and read pointers
@@ -113,7 +113,4 @@ module async_fifo
     assert property(p_gray_code(aclk_1, aresetn_1, gr_wr_pnter));
     assert property(p_gray_code(aclk_2, aresetn_2, gr_rd_pnter));
     
-
-
-                
 endmodule
